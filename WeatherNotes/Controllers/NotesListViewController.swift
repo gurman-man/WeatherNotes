@@ -8,7 +8,7 @@
 import UIKit
 
 class NotesListViewController: UITableViewController {
-
+    private var notes: [Note] = NoteMocks.sampleNotes
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +17,8 @@ class NotesListViewController: UITableViewController {
         view.backgroundColor = .white
         setupAddButton()
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "NoteCell")
+        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
+        tableView.rowHeight = 60
     }
     
     private func setupAddButton() {
@@ -32,13 +33,19 @@ class NotesListViewController: UITableViewController {
         // пізніше тут буде перехід на AddNoteViewController
     }
     
+    
+    // MARK: - Table View data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return notes.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath)
-        cell.textLabel?.text = "note 1"
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: NoteCell.identifier,
+            for: indexPath) as? NoteCell
+        else { return UITableViewCell(style: .default, reuseIdentifier: "fallback") }
+        
+        cell.configure(with: notes[indexPath.row])
         return cell
     }
     
