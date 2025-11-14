@@ -31,7 +31,14 @@ class NotesListViewController: UITableViewController {
     }
     
     @objc private func addNote() {
-        // пізніше тут буде перехід на AddNoteViewController
+        let addVC = AddNoteViewController()
+        
+        addVC.onSave = { [weak self] note in
+            self?.notes.append(note)
+            self?.tableView.reloadData()
+        }
+        
+        navigationController?.pushViewController(addVC, animated: true)
     }
     
     
