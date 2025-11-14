@@ -13,7 +13,8 @@ class NotesListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Notes"
+        title = "Weather-Notes"
+        navigationItem.backButtonTitle = ""
         view.backgroundColor = .white
         setupAddButton()
         
@@ -40,17 +41,23 @@ class NotesListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: NoteCell.identifier,
-            for: indexPath) as? NoteCell
-        else { return UITableViewCell(style: .default, reuseIdentifier: "fallback") }
+            for: indexPath
+        ) as? NoteCell else { return UITableViewCell() }
         
         cell.configure(with: notes[indexPath.row])
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
+        let selectedNote = notes[indexPath.row]   // mock-дані
+        let detailVC = NoteDetailViewController(note: selectedNote)
+        
+        navigationController?.pushViewController(detailVC, animated: true)
     }
 }
 
