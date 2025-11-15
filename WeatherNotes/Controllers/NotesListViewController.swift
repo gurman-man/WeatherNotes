@@ -8,7 +8,7 @@
 import UIKit
 
 class NotesListViewController: UITableViewController {
-    private var notes: [Note] = NoteMocks.sampleNotes
+    private var notes: [Note] = NotesStorage.loadNotes()
     private var weatherService = WeatherService()
     
     
@@ -46,10 +46,12 @@ class NotesListViewController: UITableViewController {
         let addVC = AddNoteViewController()
         
         addVC.onSave = { [weak self] note in
-            self?.notes.append(note)
-            self?.tableView.reloadData()
+            guard let self = self else { return }  // розпаковуємо self
+            
+            notes.append(note)
+            tableView.reloadData()
+            NotesStorage.saveNotes(notes) // зберігаємо
         }
-        
         navigationController?.pushViewController(addVC, animated: true)
     }
     
