@@ -9,6 +9,8 @@ import UIKit
 
 class NotesListViewController: UITableViewController {
     private var notes: [Note] = NoteMocks.sampleNotes
+    private var weatherService = WeatherService()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,6 +22,16 @@ class NotesListViewController: UITableViewController {
         
         tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
         tableView.rowHeight = 60
+        
+        weatherService.fetchWeather(for: "Ternopil") { result in
+            switch result {
+            case .success(let weather):
+                print(weather)
+                
+            case .failure(let error):
+                print("❌", error.localizedDescription)
+            }
+        }
     }
     
     private func setupAddButton() {
