@@ -27,7 +27,7 @@ class NoteCell: UITableViewCell {
     }
     
     private func setupUI() {
-       
+        
         // Налаштуванння шрифтів
         noteLabel.font = .systemFont(ofSize: 18, weight: .medium)
         dateLabel.font = .systemFont(ofSize: 13, weight: .light)
@@ -60,21 +60,52 @@ class NoteCell: UITableViewCell {
             
             iconImageView.trailingAnchor.constraint(equalTo: tempLabel.leadingAnchor, constant: -8),
             iconImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 24),
-            iconImageView.heightAnchor.constraint(equalToConstant: 24)
+            iconImageView.widthAnchor.constraint(equalToConstant: 50),
+            iconImageView.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
     
     // Отримуємо Note і заповнюємо UI
     func configure(with note: Note) {
+        // Текст нотатки
         noteLabel.text = note.text
         
+        // Форматована дата + час створення
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyy"
+        formatter.dateFormat = "dd MMM yyyy, HH:mm"
         dateLabel.text = formatter.string(from: note.date)
         
+        // Температура, якщо вона є
         tempLabel.text = note.temperature != nil ? "\(note.temperature!)°C" : ""
-        iconImageView.image = note.weatherIcon != nil ? UIImage(systemName: note.weatherIcon!) : nil
+        
+        // Якщо є код іконки — завантажуємо з сервера
+        if let iconCode = note.weatherIcon {
+            let urlString = "https://openweathermap.org/img/wn/\(iconCode)@2x.png"
+            
+            if let url = URL(string: urlString) {
+                
+                // Завантажуємо іконку асинхронно
+                URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
+                    guard let self = self else { return }
+                    
+                    // Якщо отримали дані — конвертуємо в зображення
+                    if let data = data, let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            self.iconImageView.image = image
+                        }
+                    } else {
+                        // Якщо завантаження не вдалося — показуємо пусто або placeholder
+                        DispatchQueue.main.async {
+                            self.iconImageView.image = nil // або placeholder
+                        }
+                    }
+                    
+                }.resume()
+            }
+        } else {
+            // Якщо іконки немає — очищуємо поле
+            iconImageView.image = nil
+        }
     }
 }
