@@ -13,7 +13,7 @@ struct NotesStorage {
     static func saveNotes(_ notes: [Note]) {
         let encoder = JSONEncoder()
         do {
-            let data = try encoder.encode(notes)
+            let data = try encoder.encode(notes) // перетворюємо notes у JSON
             UserDefaults.standard.set(data, forKey: key)
         } catch {
             print("Failed to save notes:", error.localizedDescription)
@@ -29,7 +29,7 @@ struct NotesStorage {
         
         let decoder = JSONDecoder()
         do {
-            let notes = try decoder.decode([Note].self, from: data)
+            let notes = try decoder.decode([Note].self, from: data) // перетворюємо JSON у структуру Note
             return notes
         }catch {
             print("Failed to load notes:", error.localizedDescription)
