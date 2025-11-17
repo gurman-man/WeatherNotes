@@ -11,6 +11,7 @@ final class NoteDetailViewController: UIViewController {
 
     private let note: Note
     
+    // MARK: - UI Elements
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "AvenirNext-DemiBold", size: 26)
@@ -63,6 +64,7 @@ final class NoteDetailViewController: UIViewController {
     }()
     
     
+    // MARK: - Stacks
     private let topStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -102,23 +104,8 @@ final class NoteDetailViewController: UIViewController {
         return v
     }()
     
-    private func infoRow(title: String, value: String) -> UIStackView {
-        let t = UILabel()
-        t.text = title
-        t.font = .systemFont(ofSize: 15, weight: .regular)
-        t.textColor = .secondaryLabel
-
-        let v = UILabel()
-        v.text = value
-        v.font = .systemFont(ofSize: 16, weight: .semibold)
-        v.textColor = .label
-
-        let stack = UIStackView(arrangedSubviews: [t, UIView(), v])
-        stack.axis = .horizontal
-        return stack
-    }
     
-    
+    // MARK: - Initializers
     init(note: Note) {
         self.note = note
         super.init(nibName: nil, bundle: nil)
@@ -129,32 +116,46 @@ final class NoteDetailViewController: UIViewController {
     }
     
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         title = "Details"
-        
-        // Кнопка поділитися
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
-        
-        // Додавання стеків
-        [topStack, middleStack, cardView, titleLabel].forEach { view.addSubview($0) }
-        
-        // Додавання полотна
-        cardView.addSubview(infoStack)
-        
-        // Налаштування topStack
-        [cityLabel, weatherIconView].forEach { topStack.addArrangedSubview($0) }
-        
-        // Додавання елементів до middleStack
-        [descLabel, tempLabel, dateLabel].forEach { middleStack.addArrangedSubview($0) }
 
-        
+        setupNavigationBar()
+        setupViews()
         setupConstraints()
         configure(with: note)
     }
     
     
+    // MARK: - Setup Navigation
+    private func setupNavigationBar() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(shareTapped)
+        )
+    }
+    
+    
+    // MARK: - Setup Views
+       private func setupViews() {
+           // Додавання стеків
+           [topStack, middleStack, cardView, titleLabel].forEach { view.addSubview($0) }
+           
+           // Додавання полотна
+           cardView.addSubview(infoStack)
+           
+           // Налаштування topStack
+           [cityLabel, weatherIconView].forEach { topStack.addArrangedSubview($0) }
+           
+           // Додавання елементів до middleStack
+           [descLabel, tempLabel, dateLabel].forEach { middleStack.addArrangedSubview($0) }
+       }
+    
+    
+    // MARK: - Actions
     @objc func shareTapped() {
         var items: [Any] = [note.text]
         if let temp = note.temperature {
@@ -166,6 +167,7 @@ final class NoteDetailViewController: UIViewController {
     }
     
     
+    // MARK: - Constraints
      func setupConstraints() {
          NSLayoutConstraint.activate([
             weatherIconView.widthAnchor.constraint(equalToConstant: 80),
@@ -193,6 +195,7 @@ final class NoteDetailViewController: UIViewController {
     }
     
     
+    // MARK: - Configure
     private func configure(with note: Note) {
         titleLabel.text = note.text
         dateLabel.text = note.date.formatted()
@@ -205,6 +208,24 @@ final class NoteDetailViewController: UIViewController {
         infoStack.addArrangedSubview(infoRow(title: "Humidity ", value: "\(note.humidity ?? 0)%"))
         infoStack.addArrangedSubview(infoRow(title: "Wind ", value: "\(note.wind ?? 0)m/s"))
         infoStack.addArrangedSubview(infoRow(title: "Cloudiness ", value: "\(note.cloudiness ?? 0)%"))
+    }
+    
+    
+    // MARK: - Helpers
+    private func infoRow(title: String, value: String) -> UIStackView {
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        titleLabel.textColor = .secondaryLabel
+        
+        let valueLabel = UILabel()
+        valueLabel.text = value
+        valueLabel.font = .systemFont(ofSize: 16, weight: .semibold)
+        valueLabel.textColor = .label
+        
+        let stack = UIStackView(arrangedSubviews: [titleLabel, UIView(), valueLabel])
+        stack.axis = .horizontal
+        return stack
     }
 }
 
