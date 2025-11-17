@@ -80,5 +80,13 @@ class NotesListViewController: UITableViewController {
         
         navigationController?.pushViewController(detailVC, animated: true)
     }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            notes.remove(at: indexPath.row)
+            NotesStorage.saveNotes(notes)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
 }
 
