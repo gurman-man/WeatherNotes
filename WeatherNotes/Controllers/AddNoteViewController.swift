@@ -12,6 +12,7 @@ class AddNoteViewController: UIViewController {
     var onSave: ((Note) -> Void)? // виклик, який повідомить NotesListViewController, що створено нову нотатку
     private var weatherService = WeatherService()
     
+    // MARK: - UI Elements
     private let activityIndicator: UIActivityIndicatorView =  {
         let view = UIActivityIndicatorView()
         view.style = .large
@@ -36,9 +37,17 @@ class AddNoteViewController: UIViewController {
         return view
     }()
 
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setupView()
+        setupConstraints()
+    }
+    
+    
+    // MARK: - Setup View
+    private func setupView() {
         view.backgroundColor = .systemBackground
         title = "Add Note"
         
@@ -50,10 +59,10 @@ class AddNoteViewController: UIViewController {
             target: self,
             action: #selector(saveTapped)
         )
-        
-        setupConstraints()
     }
     
+    
+    // MARK: - Actions
     @objc func saveTapped() {
         let text = textView.text ?? ""
         guard !text.isEmpty else { return }
@@ -96,6 +105,7 @@ class AddNoteViewController: UIViewController {
     }
     
     
+    // MARK: - Constraints
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
