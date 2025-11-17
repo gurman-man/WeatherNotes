@@ -8,10 +8,12 @@
 import UIKit
 
 class NotesListViewController: UITableViewController {
+    
+    // MARK: - Properties
     private var notes: [Note] = []
     private var weatherService = WeatherService()
     
-    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -21,28 +23,11 @@ class NotesListViewController: UITableViewController {
         
         setupTableView()
         setupAddButton()
-        
-        // Асинхронне завантаження нотаток
-        NotesStorage.loadNotesAsync { [weak self] loadedNotes in
-            guard let self = self else { return }
-            self.notes = loadedNotes
-            self.tableView.reloadData()
-        }
-        
-        // Асинхронне отримання погоди
-        weatherService.fetchWeather(for: "Ternopil") { result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let weather):
-                    print(weather)
-                    
-                case .failure(let error):
-                    print("❌", error.localizedDescription)
-                }
-            }
-        }
+        loadNotes()
+        fetchWeather()
     }
     
+    // MARK: - Setup Table & Buttons
     private func setupTableView() {
         tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
@@ -59,27 +44,52 @@ class NotesListViewController: UITableViewController {
         )
     }
     
+    // MARK: - Data Loading
+    private func loadNotes() {
+        // Асинхронне завантаження нотаток
+         NotesStorage.loadNotesAsync { [weak self] loadedNotes in
+             guard let self = self else { return }
+             self.notes = loadedNotes
+             self.tableView.reloadData()
+         }
+     }
+    
+    private func fetchWeather() {
+        // Асинхронне отримання погоди
+        weatherService.fetchWeather(for: "Ternopil") { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let weather):
+                    print(weather)
+                    
+                case .failure(let error):
+                    print("❌", error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Actions
     @objc private func addNote() {
         let addVC = AddNoteViewController()
         
         addVC.onSave = { [weak self] note in
             guard let self = self else { return }
-            
             notes.append(note)
             tableView.reloadData()
             NotesStorage.saveNotesAsync(self.notes)  // Асинхронне збереження
         }
+        
         navigationController?.pushViewController(addVC, animated: true)
     }
-    
     
     // MARK: - Table View data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
     }
     
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: NoteCell.identifier,
             for: indexPath
@@ -89,6 +99,7 @@ class NotesListViewController: UITableViewController {
         return cell
     }
     
+    // MARK: - Table View Delegate
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -97,6 +108,7 @@ class NotesListViewController: UITableViewController {
 
         navigationController?.pushViewController(detailVC, animated: true)
     }
+    
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
