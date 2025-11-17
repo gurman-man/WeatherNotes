@@ -18,10 +18,9 @@ class NotesListViewController: UITableViewController {
         title = "Weather-Notes"
         navigationItem.backButtonTitle = ""
         view.backgroundColor = .systemBackground
-        setupAddButton()
         
-        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
-        tableView.rowHeight = 60
+        setupTableView()
+        setupAddButton()
         
         weatherService.fetchWeather(for: "Ternopil") { result in
             switch result {
@@ -32,6 +31,14 @@ class NotesListViewController: UITableViewController {
                 print("❌", error.localizedDescription)
             }
         }
+    }
+    
+    private func setupTableView() {
+        tableView = UITableView(frame: .zero, style: .insetGrouped)
+        tableView.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        tableView.separatorColor = .separator
+        tableView.rowHeight = 80
+        tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
     }
     
     private func setupAddButton() {
