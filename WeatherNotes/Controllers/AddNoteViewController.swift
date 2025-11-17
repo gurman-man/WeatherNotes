@@ -21,11 +21,18 @@ class AddNoteViewController: UIViewController {
         return view
     }()
 
-    private let textField: UITextField = {
-        let view = UITextField()
-        view.placeholder = "Enter note..."
-        view.borderStyle = .roundedRect
+    private let textView: UITextView = {
+        let view = UITextView()
+        view.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        view.textColor = .label
+        view.backgroundColor = UIColor.systemGray6
+        view.layer.cornerRadius = 12
+        view.layer.borderWidth = 2
+        view.layer.borderColor = UIColor.separator.cgColor
+        view.textContainerInset = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.isScrollEnabled = false
+        view.textColor = UIColor.label
         return view
     }()
 
@@ -35,8 +42,9 @@ class AddNoteViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Add Note"
         
-        view.addSubview(textField)
+        view.addSubview(textView)
         view.addSubview(activityIndicator)
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .save,
             target: self,
@@ -47,7 +55,7 @@ class AddNoteViewController: UIViewController {
     }
     
     @objc func saveTapped() {
-        let text = textField.text ?? ""
+        let text = textView.text ?? ""
         guard !text.isEmpty else { return }
         activityIndicator.startAnimating()
         
@@ -90,12 +98,11 @@ class AddNoteViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            textField.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            textField.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -100),
-            textField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7),
-            textField.heightAnchor.constraint(equalToConstant: 44),
+            textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            textView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            textView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
-            activityIndicator.topAnchor.constraint(equalTo: textField.bottomAnchor, constant: 100),
+            activityIndicator.topAnchor.constraint(equalTo: textView.bottomAnchor, constant: 30),
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
