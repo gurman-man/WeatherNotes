@@ -36,7 +36,7 @@ final class WeatherService {
             URLQueryItem(name: "appid", value: apiKey),
             URLQueryItem(name: "q", value: city),
             URLQueryItem(name: "units", value: "metric"),
-            URLQueryItem(name: "lang", value: "ua")
+            URLQueryItem(name: "lang", value: "en")
         ]
         
         guard let url = urlComponents?.url else {
@@ -65,7 +65,11 @@ final class WeatherService {
                 let weather = Weather(
                     temperature: decoded.main.temp,
                     description: decoded.weather.first?.description ?? "",
-                    icon: decoded.weather.first?.icon ?? ""
+                    icon: decoded.weather.first?.icon ?? "",
+                    humidity: decoded.main.humidity,
+                    wind: decoded.wind.speed,
+                    cloudiness: decoded.clouds.all,
+                    city: decoded.name
                 )
                 completion(.success(weather))
             } catch {

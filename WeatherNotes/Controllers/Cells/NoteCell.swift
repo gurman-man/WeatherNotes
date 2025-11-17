@@ -72,40 +72,12 @@ class NoteCell: UITableViewCell {
         noteLabel.text = note.text
         
         // Форматована дата + час створення
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM yyyy, HH:mm"
-        dateLabel.text = formatter.string(from: note.date)
+        dateLabel.text = note.date.formatted()
         
         // Температура, якщо вона є
         tempLabel.text = note.temperature != nil ? "\(note.temperature!)°C" : ""
         
         // Якщо є код іконки — завантажуємо з сервера
-        if let iconCode = note.weatherIcon {
-            let urlString = "https://openweathermap.org/img/wn/\(iconCode)@2x.png"
-            
-            if let url = URL(string: urlString) {
-                
-                // Завантажуємо іконку асинхронно
-                URLSession.shared.dataTask(with: url) { [weak self] data, _, error in
-                    guard let self = self else { return }
-                    
-                    // Якщо отримали дані — конвертуємо в зображення
-                    if let data = data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            self.iconImageView.image = image
-                        }
-                    } else {
-                        // Якщо завантаження не вдалося — показуємо пусто або placeholder
-                        DispatchQueue.main.async {
-                            self.iconImageView.image = nil // або placeholder
-                        }
-                    }
-                    
-                }.resume()
-            }
-        } else {
-            // Якщо іконки немає — очищуємо поле
-            iconImageView.image = nil
-        }
+        iconImageView.setWeatherIcon(note.weatherIcon ?? "")
     }
 }

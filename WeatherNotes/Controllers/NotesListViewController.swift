@@ -17,7 +17,7 @@ class NotesListViewController: UITableViewController {
         
         title = "Weather-Notes"
         navigationItem.backButtonTitle = ""
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         setupAddButton()
         
         tableView.register(NoteCell.self, forCellReuseIdentifier: NoteCell.identifier)
