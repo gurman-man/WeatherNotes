@@ -8,49 +8,68 @@
 import UIKit
 
 class NoteCell: UITableViewCell {
+    
+    // MARK: - Identifier
     static let identifier = "NoteCell"
     
-    private let noteLabel = UILabel()
-    private let dateLabel = UILabel()
-    private let tempLabel = UILabel()
-    private let iconImageView = UIImageView()
+    // MARK: - UI Elements
     
+    private let noteLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        return label
+    }()
+    
+    private let dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13, weight: .light)
+        return label
+    }()
+    
+    private let tempLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        return label
+    }()
+    
+    private let iconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.tintColor = .systemBlue
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
+    
+    // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupUI()
     }
     
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    // MARK: - Setup UI
     private func setupUI() {
-        
-        // Налаштуванння шрифтів
-        noteLabel.font = .systemFont(ofSize: 18, weight: .medium)
-        dateLabel.font = .systemFont(ofSize: 13, weight: .light)
-        tempLabel.font = .systemFont(ofSize: 16, weight: .semibold)
-        
-        // Іконка погоди
-        iconImageView.tintColor = .systemBlue
-        iconImageView.contentMode = .scaleAspectFit
-        
+        // Stack для тексту нотатки та дати
         let stack = UIStackView(arrangedSubviews: [noteLabel, dateLabel])
         stack.axis = .vertical
         stack.distribution = .equalSpacing
         stack.spacing = 2
         
+        // Додаємо subviews
         contentView.addSubview(stack)
         contentView.addSubview(tempLabel)
         contentView.addSubview(iconImageView)
         
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        tempLabel.translatesAutoresizingMaskIntoConstraints = false
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        // Вимикаємо autoresizing mask
+        [stack, tempLabel, iconImageView].forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
         
-        // Contraints
+        
+        // MARK: - Constraints
         NSLayoutConstraint.activate([
             stack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             stack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -66,7 +85,7 @@ class NoteCell: UITableViewCell {
     }
     
     
-    // Отримуємо Note і заповнюємо UI
+    // MARK: - Configure Cell
     func configure(with note: Note) {
         // Текст нотатки
         noteLabel.text = note.text
