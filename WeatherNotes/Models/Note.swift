@@ -11,6 +11,14 @@ struct Note: Codable {
     let id: UUID
     let text: String
     let date: Date
+    
     let temperature: Double?
     let weatherIcon: String?
+    let weatherDescription: String?
+    
+    let humidity: Int?
+    let wind: Double?
+    let cloudiness: Int?
+    let city: String?
+    
 }

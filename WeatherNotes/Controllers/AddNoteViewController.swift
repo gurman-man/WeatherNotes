@@ -59,7 +59,12 @@ class AddNoteViewController: UIViewController {
                     text: text,
                     date: Date(),
                     temperature: weather.temperature,
-                    weatherIcon: weather.icon
+                    weatherIcon: weather.icon,
+                    weatherDescription: weather.description,
+                    humidity: weather.humidity,
+                    wind: weather.wind,
+                    cloudiness: weather.cloudiness,
+                    city: weather.city
                 )
                 
                 DispatchQueue.main.async {
