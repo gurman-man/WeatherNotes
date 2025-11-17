@@ -73,7 +73,7 @@ final class WeatherService {
                 )
                 completion(.success(weather))
             } catch {
-                completion(.failure(.decodingError(err!.localizedDescription)))
+                completion(.failure(.decodingError(error.localizedDescription)))
             }
             
         }.resume()

@@ -38,7 +38,7 @@ class AddNoteViewController: UIViewController {
         view.addSubview(textField)
         view.addSubview(activityIndicator)
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .save,  // стандартна іконка "Save"
+            barButtonSystemItem: .save,
             target: self,
             action: #selector(saveTapped)
         )

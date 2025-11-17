@@ -10,6 +10,7 @@ import Foundation
 struct NotesStorage {
     private static let key = "savedNotes"
     
+    // MARK: - Synchronous
     static func saveNotes(_ notes: [Note]) {
         let encoder = JSONEncoder()
         do {
@@ -34,6 +35,22 @@ struct NotesStorage {
         }catch {
             print("Failed to load notes:", error.localizedDescription)
             return []
+        }
+    }
+    
+    // MARK: - Asynchronous
+    static func saveNotesAsync(_ notes: [Note]) {
+        DispatchQueue.global(qos: .utility).async {
+            saveNotes(notes)
+        }
+    }
+    
+    static func loadNotesAsync(completion: @escaping ([Note]) -> Void) {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let notes = loadNotes()
+            DispatchQueue.main.async {
+                completion(notes)
+            }
         }
     }
 }
