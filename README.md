@@ -17,9 +17,9 @@
 ## Screenshots
 
 <div align="center">
-  <img src="./Screenshots/1.png" alt="Main screen" width="325">
-  <img src="./Screenshots/2.png" alt="Add note screen" width="325">
-  <img src="./Screenshots/3.png" alt="Detail screen" width="325">
+  <img src="./Screenshots/1.png" alt="Main screen" width="244">
+  <img src="./Screenshots/2.png" alt="Add note screen" width="244">
+  <img src="./Screenshots/3.png" alt="Detail screen" width="244">
 </div>
 
 ---
@@ -27,11 +27,7 @@
 ## 🛠️ Technical Stack
 
 <p align="center">
-  <strong>Language:</strong> Swift<br>
-  <strong>UI Framework:</strong> SwiftUIKit<br>
-  <strong>Architecture:</strong> MVVM<br>
-  <strong>Networking:</strong> URLSession<br>
-  <strong>Storage:</strong> UserDefaults
+Swift  |  UIKit  |  MVVM  |  URLSession  |  UserDefaults
 </p>
 
 ---
